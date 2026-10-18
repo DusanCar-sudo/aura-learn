@@ -1,0 +1,4 @@
+{"instruction":"fix the off-by-one in range()","input":"code returned 1 row too many","output":"Change `range(len(items))` to `range(len(items) - 1)`.","metadata":{"episode_id":"f1","provenance":"correction"}}
+{"instruction":"rename variable for clarity","input":"t holds elapsed milliseconds","output":"Rename `t` to `elapsedMs` at all three use sites.","metadata":{"episode_id":"f2","provenance":"correction"}}
+{"instruction":"add a guard clause","input":"function crashes on empty list","output":"Add `if not items: return []` at the top.","metadata":{"episode_id":"f3","provenance":"correction"}}
+{"instruction":"explain the import error","input":"ModuleNotFoundError: yaml","output":"Install PyYAML; it is a missing dependency, not a stdlib module.","metadata":{"episode_id":"f4","provenance":"correction"}}
