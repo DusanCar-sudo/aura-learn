@@ -70,3 +70,25 @@ def test_cli_export_and_exclude(tmp_path):
 
 def test_missing_dir_is_empty(tmp_path):
     assert list(iter_episodes(tmp_path / "nope")) == []
+
+
+def test_enrichment_fields_flow_into_row(tmp_path):
+    rich = _ep(
+        id="rich",
+        filesTouched=["src/a.py", "src/b.py"],
+        diff="diff --git a/src/a.py …",
+        testResult="pass",
+        reviewerReason=None,
+    )
+    rejected = _ep(id="rejected", reviewerApproved=False, reviewerReason="claim unsupported")
+    _write(tmp_path, "p", [rich, rejected])
+    eps = list(iter_episodes(tmp_path))
+    rich_ep = next(e for e in eps if e.id == "rich")
+    row = correction_row(rich_ep)
+    assert rich_ep.files_touched == ["src/a.py", "src/b.py"]
+    assert rich_ep.diff == "diff --git a/src/a.py …"
+    assert rich_ep.test_result == "pass"
+    assert row["metadata"]["files_touched"] == ["src/a.py", "src/b.py"]
+    assert row["metadata"]["test_result"] == "pass"
+    rej = next(e for e in eps if e.id == "rejected")
+    assert rej.reviewer_reason == "claim unsupported"

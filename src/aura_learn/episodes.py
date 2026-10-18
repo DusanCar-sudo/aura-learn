@@ -38,6 +38,10 @@ class Episode:
     archimedes_output: str | None = None
     large_model_used: str | None = None
     large_model_output: str | None = None
+    files_touched: list[str] = field(default_factory=list)
+    diff: str | None = None
+    test_result: str | None = None
+    reviewer_reason: str | None = None
     tokens_used: dict[str, int] = field(default_factory=dict)
     duration_ms: int = 0
 
@@ -58,6 +62,10 @@ class Episode:
             archimedes_output=data.get("archimedesOutput"),
             large_model_used=data.get("largeModelUsed"),
             large_model_output=data.get("largeModelOutput"),
+            files_touched=list(data.get("filesTouched") or []),
+            diff=data.get("diff"),
+            test_result=data.get("testResult"),
+            reviewer_reason=data.get("reviewerReason"),
             tokens_used=dict(data.get("tokensUsed") or {}),
             duration_ms=int(data.get("durationMs", 0) or 0),
         )
@@ -110,6 +118,9 @@ def correction_row(ep: Episode, require_approval: bool = True) -> dict[str, Any]
             "timestamp": ep.timestamp,
             "task_category": ep.task_category,
             "large_model": ep.large_model_used,
+            "files_touched": ep.files_touched,
+            "test_result": ep.test_result,
+            "reviewer_reason": ep.reviewer_reason,
             "provenance": "correction",
         },
     }
