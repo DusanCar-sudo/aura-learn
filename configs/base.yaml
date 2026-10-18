@@ -1,0 +1,29 @@
+# Base experiment config. Values marked TUNE are starting points, not decisions.
+
+base_model: Qwen/Qwen2.5-Coder-7B-Instruct   # decision D2
+
+data:
+  episodes_dir: ~/.aura/episodes
+  require_reviewer_approval: true
+  time_split_date: null          # set in Phase 2; nothing after this date is trained on
+  excluded_projects: []
+
+replay:                          # Phase 4
+  new: 0.5                       # TUNE
+  old: 0.3                       # TUNE
+  anchor: 0.2                    # TUNE
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  quantization: 4bit
+  learning_rate: 5.0e-5          # TUNE: low, incremental updates
+  max_steps_per_night: 300       # TUNE
+
+guard:
+  min_personal_gain: 0.0         # must not get worse on the personal benchmark
+  max_forgetting_drop: 2.0       # points on the general benchmark
+
+compute:
+  monthly_budget_usd: null       # decision D3
