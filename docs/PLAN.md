@@ -30,7 +30,11 @@ If the curve goes up and forgetting stays flat, that is the paper and the pitch.
 1. Create the `aura-learn` repo (this scaffold), push to GitHub under DusanCar-sudo.
 2. Python env: Python 3.11, PyTorch, transformers, peft, trl, datasets, vllm or llama.cpp for serving.
 3. Freeze the **data contract** with aura-code: the episode JSON schema (`src/archimedes/types.ts → Episode`) is the interface. aura-learn reads `~/.aura/episodes/` read-only.
-4. Compute: training on the existing GCP project (Vertex/GKE with one L4 or A100 spot). Local machine (680M iGPU) is inference-only — it was unstable for training.
+4. Compute — zero-cost ladder (local machine can't run 7B; the GCP free trial blocks GPUs):
+   - **Develop at 0.5B–1.5B** (Qwen2.5-Coder-0.5B/1.5B) on CPU — every pipeline piece (export, replay, guard, eval) is proven small first.
+   - **Train 7B on Kaggle** — free T4 GPUs, 12 h sessions, ~30 h/week. 7B QLoRA fits a 16 GB T4; nightly consolidation is well under the weekly quota. Colab free T4 as backup.
+   - **Apply now:** TPU Research Cloud (free TPUs, expects published research — matches the paper track), Modal academic grant (up to $10k), AWS Activate Founders (up to $5k, self-serve), Google for Startups Start tier (up to $2k).
+   - Paid GCP only after credits land.
 5. Experiment tracking: plain JSONL run logs + one results table in `experiments/` (no SaaS dependency).
 
 **Exit:** `aura-learn export` turns real episodes into a training JSONL. ✅ already implemented in this scaffold.
@@ -159,6 +163,6 @@ Published on Zenodo (DOI) and arXiv, linked to ORCID.
 
 - **D1 Name:** `aura-learn` (working name) — keep or rename?
 - **D2 Base model:** Qwen2.5-Coder-7B-Instruct (recommended: TTT + LoRA tooling is mature) vs Granite 4.1 3B (cheaper, weaker).
-- **D3 Compute budget:** monthly GCP cap (suggest $150–300 for phases 2–5).
+- **D3 Compute budget:** $0 to start (Kaggle + small models); set a paid cap only once grant credits arrive or Kaggle quota becomes the bottleneck.
 - **D4 Visibility:** public from day 1 (credibility, community) or private until Phase 7 (protect the idea)?
 - **D5 License:** MIT like aura-code, or Apache-2.0 (patent grant, preferred by companies)?
